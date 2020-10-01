@@ -1,147 +1,120 @@
-#include "studentGroup.h"
+#include "StudentGroup.h"
 
-StudentGroup::StudentGroup(int studet_numbers, string studentgroupnumber) : m_studet_numbers(studet_numbers),
-m_studentgroupnumber(studentgroupnumber), m_students(new list<Student>())
+StudentGroup::StudentGroup(const int studet_numbers, const string& studentgroupnumber) : m_studet_numbers(studet_numbers),
+m_studentgroupnumber(studentgroupnumber)
 {}
-struct compgrades
+void StudentGroup::AddStudent(const Student& student)
 {
-	bool operator()(Student& a, Student& b)
+	if (m_studet_numbers > i) {
+		this->m_students.push_back(new Student(student));
+		i++;
+	}else 
+		throw std::exception(std::string("Group " + this->m_studentgroupnumber + " is full").c_str());
+	
+}
+void StudentGroup::AddStudent(const string& name, const string& surname, const string& patronymic, const vector<int>& grades)
+{
+	if (m_studet_numbers > i)
 	{
-		vector<int> vec1 = a.Getgrades(), vec2 = b.Getgrades();
+		const Student& student { name, surname, patronymic, grades };
+		this->m_students.push_back(new Student(student));
+		i++;
+	}else
+		throw std::exception(std::string("Group " + this->m_studentgroupnumber + " is full").c_str());
+}
+void StudentGroup::RemoveStudent(Student* student)
+{
+	if (i != 0)
+	{
+		this->m_students.erase(find(this->m_students.begin(), this->m_students.end(), student));
+		i--;
+	}
+}
+Student* StudentGroup::Find(const string& name, const string& surname, const string& patronymic)
+{
+
+	for (vector<Student*>::iterator i = this->m_students.begin(); i != this->m_students.end(); i++)
+	{
+		if (((*i)->getName() == name) && ((*i)->getSurname() == surname) && ((*i)->getPatronymic()) == patronymic)
+		{
+			return *i;
+		}
+	}
+	throw std::exception(std::string("Student " + name + " " + surname + " " + patronymic + " is not in group " + m_studentgroupnumber).c_str());
+}
+auto compGrades{
+
+	[](Student  *a, Student  *b) {
+	vector<int> vec1 = a->getGrades(), vec2 = b->getGrades();
 		int sum1 = 0, sum2 = 0;
 		for (auto& n : vec1)
 			sum1 += n;
 		for (auto& n : vec2)
 			sum2 += n;
 		return ((float)sum1 / vec1.size()) < ((float)sum2 / vec2.size());
-	}
-
+}
 };
-struct compFIO
+const int comparison(const string a, const string b)
 {
-	int comparison(string a, string b)
+	if (a.length() == b.length())
 	{
-		if (a.length() == b.length())
+		int n;
+		if (a.length() >= b.length())
+			n = b.length();
+		else
+			n = a.length();
+		for (int i = 0; i < n; i++)
 		{
-			int n;
-			if (a.length() >= b.length())
-				n = b.length();
-			else
-				n = a.length();
-			for (int i = 0; i < n; i++)
-			{
-				if (tolower(a[i]) < tolower(b[i]))
-					return 1;
-				else if (tolower(a[i]) > tolower(b[i]))
-					return 0;
-			}
-			if (a < b)
-				return 0;
-			else if (a > b)
+			if (tolower(a[i]) < tolower(b[i]))
 				return 1;
-			return 3;
+			else if (tolower(a[i]) > tolower(b[i]))
+				return 0;
 		}
+		if (a < b)
+			return 0;
 		else if (a > b)
 			return 1;
-		else
-			return 0;
+		return 3;
 	}
-	bool operator()(Student& a, Student& b)
-	{
-		int n = comparison(a.Getsurname(), b.Getsurname());
-		if (n != 3)
-			return n;
-		n = comparison(a.Getname(), b.Getname());
-		if (n != 3)
-			return n;
-		n = comparison(a.Getpatronymic(), b.Getpatronymic());
-		if (n != 3)
-			return n;
-	}
+	else if (a.length() > b.length())
+		return 1;
+	else
+		return 0;
+}
+auto compFIO{
 
+	[](Student* a, Student* b) {
+	int n = comparison(a->getSurname(), b->getSurname());
+		if (n != 3)
+			return n;
+		n = comparison(a->getName(), b->getName());
+		if (n != 3)
+			return n;
+		n = comparison(a->getPatronymic(), b->getPatronymic());
+		if (n != 3)
+			return n;
+    }
 };
-void StudentGroup::AddStudent(Student student)
-{
-	if (m_studet_numbers > i)
-	{
-		this->m_students->push_front(student);
-		i++;
-	}
-	else
-		throw std::string("Group " + this->m_studentgroupnumber + " is full");
-}
-void StudentGroup::AddStudent(string name, string surname, string patronymic, vector<int> grades)
-{
-	if (m_studet_numbers > i)
-	{
-		Student* student = new Student(name, surname, patronymic, grades);
-		this->m_students->push_front(*student);
-		i++;
-	}
-	else
-		throw std::string("Group " + this->m_studentgroupnumber + " is full");
-}
-
-
-void StudentGroup::RemoveStudent(list<Student>::iterator student)
-{
-	if (i != 0)
-	{
-		this->m_students->erase(student);
-		i--;
-	}
-}
-
-list<Student>::iterator StudentGroup::Fine(string name, string surname, string patronymic)
-{
-	for (list<Student>::iterator i = this->m_students->begin(); i != this->m_students->end(); i++)
-	{
-		if ((i->Getname() == name) && (i->Getsurname() == surname) && (i->Getpatronymic()) == patronymic)
-		{
-			return i;
-		}
-	}
-	throw std::string("Student " + name + " " + surname + " " + patronymic + " is not in group " + m_studentgroupnumber);
-
-
-}
 
 void StudentGroup::SortFIO()
 {
-	(*m_students).sort(compFIO());
+	sort(this->m_students.begin(), this->m_students.end(), compFIO);
 }
 void StudentGroup::Sortgrades()
 {
-	(*m_students).sort(compgrades());
+	sort(this->m_students.begin(), this->m_students.end(), compGrades);
+
 }
 
-string Student::Getname()
+ostream& operator<<(std::ostream& os, const StudentGroup& studentgroup)
 {
-	return m_name;
-}
-string Student::Getsurname()
-{
-	return m_surname;
-}
-string Student::Getpatronymic()
-{
-	return m_patronymic;
-}
-vector<int> Student::Getgrades()
-{
-	return m_grades;
-}
-ostream& operator<<(std::ostream & os, const StudentGroup & studentgroup)
-{
-	os << "Ãðóïïà " << studentgroup.m_studentgroupnumber << endl;
-	for (list<Student>::iterator i = studentgroup.m_students->begin(); i != studentgroup.m_students->end(); i++)
+	os << "Group " << studentgroup.m_studentgroupnumber << endl;
+	for (const auto n : studentgroup.m_students)
 	{
-		os << i->Getsurname() << "  " << i->Getname() << "  " << i->Getpatronymic() << "  ";
-
-		for (int j = 0; j < (i->Getgrades()).size(); j++)
-			os << (i->Getgrades())[j] << " ";
+		os << n->getSurname() << "  " << n->getName() << "  " << n->getPatronymic() << "  ";
+		for (const auto& k : n->getGrades())
+			os << k << " ";
 		os << endl;
 	}
 	return os;
 }
-int StudentGroup::i = 0;

@@ -1,35 +1,29 @@
 #pragma once
-#include "student.h"
+#include "Student.h"
 
 class StudentGroup
 {
 private:
-	list<Student>* m_students;
+	vector<Student*> m_students;
 	const int m_studet_numbers;
-	string m_studentgroupnumber;
-	static int i;
+	const string m_studentgroupnumber;
+	int i = 0;
 public:
 
-	StudentGroup(int studet_numbers, string studentgroupnumber);
+	StudentGroup(const int studet_numbers, const string& studentgroupnumber);
 
-	void AddStudent(Student student);
-
-	void AddStudent(string name, string surname, string patronymic, vector<int> grades);
-
-	void RemoveStudent(list<Student>::iterator student);
+	void AddStudent(const Student& student);
+	
+	void AddStudent(const string& name, const string& surname, const string& patronymic, const vector<int>& grades);
+	
+	void RemoveStudent(Student* student);
 
 	void SortFIO();
-
 	void Sortgrades();
+	
+	Student* Find(const string& name, const string& surname, const string& patronymic);
 
-	list<Student>::iterator Fine(string name, string surname, string patronymic);
-
-	friend string Student::Getname();
-	friend string Student::Getsurname();
-	friend string Student::Getpatronymic();
-	friend vector<int> Student::Getgrades();
-	friend ostream& operator<<(std::ostream& os, const StudentGroup& students);
-
+	friend ostream& operator<<(std::ostream & os, const StudentGroup & students);
 };
 
 

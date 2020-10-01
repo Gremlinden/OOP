@@ -1,23 +1,31 @@
-#include "student.h"
+#include "Student.h"
 
-
-Student::Student(string name, string surname, string patronymic, vector<int> grades) :
+Student::Student(const string& name, const string& surname, const string& patronymic,const vector<int>& grades) :
 	m_name(name), m_surname(surname), m_patronymic(patronymic), m_grades(grades)
 {}
 
-std::ostream& operator<<(std::ostream& os, const list<Student>::iterator& student)
+const string& Student::getName()const
 {
-	os << (*student).Getsurname() << "  " << (*student).Getname() << "  " << (*student).Getpatronymic() << "  ";
-	for (int i = 0; i < ((*student).Getgrades()).size(); i++)
-		os << (*student).Getgrades()[i] << " ";
-	cout << endl;
-	return os;
+	return m_name;
 }
-std::ostream& operator<<(std::ostream & os, const Student & student)
+const string& Student::getSurname()const
+{
+	return m_surname;
+}
+const string& Student::getPatronymic()const
+{
+	return m_patronymic;
+}
+const vector<int>& Student::getGrades()const
+{
+	return m_grades;
+}
+
+std::ostream& operator<<(std::ostream& os, const Student& student)
 {
 	os << student.m_name << "  " << student.m_surname << "  " << student.m_patronymic << "  ";
-	for (int i = 0; i < student.m_grades.size(); i++)
-		os << student.m_grades[i] << " ";
+	for (auto& n : student.m_grades)
+		os << n << " ";
 	cout << endl;
 	return os;
 }
