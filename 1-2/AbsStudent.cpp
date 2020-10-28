@@ -10,7 +10,7 @@ AbsStudent::AbsStudent(const std::string& name, const std::string& surname, cons
 }
 AbsStudent::~AbsStudent()
 {
-	for (const std::pair<std::string, Grades*>& k : m_subjects_grades)
+	for (const auto& k : m_subjects_grades)
 	{
 		delete k.second;
 	}
