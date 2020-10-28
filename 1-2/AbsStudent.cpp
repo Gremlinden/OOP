@@ -5,7 +5,7 @@ AbsStudent::AbsStudent(const std::string& name, const std::string& surname, cons
 {
 	for(auto &k: subjects_grades)
 	{
-		this->m_subjects_grades.insert(std::make_pair(k.first, new Grades{ k.second }));
+		this->m_subjects_grades[k.first] = new Grades{ k.second };
 	}
 }
 AbsStudent::~AbsStudent()
@@ -37,7 +37,7 @@ void AbsStudent::setSubjectsGrades(std::map<std::string, std::vector<int>> &subj
 {
 	for (const auto& k : subjects_grades)
 	{
-		this->m_subjects_grades.insert(std::make_pair(k.first, new Grades{ k.second }));
+		this->m_subjects_grades[k.first] = new Grades{ k.second };
 	}
 }
 
