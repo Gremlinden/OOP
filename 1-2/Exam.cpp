@@ -8,12 +8,11 @@ Exam::Exam(StudentGroup* studentgroup, const std::string& subject, int count_att
 
 void Exam::AllowExam()
 {
-	for(auto student = m_studentgroup->BeginStudentGroup(); student < m_studentgroup->EndStudentGroup(); student++)
+	for(auto student: *m_studentgroup)
 	{
-		if ((*student)->getSubjectsGrades().count(m_subject) == 0)
+		Grades* grades = student->gGrades(m_subject);
+		if (grades == nullptr)
 			continue;
-
-		Grades * grades = (*student)->getSubjectsGrades().find(m_subject)->second;
 
 		if (!((grades->getGradesExam() > 2) && (grades->getGradesExam() <= 5)))
 		{
@@ -31,6 +30,7 @@ void Exam::AllowExam()
 				grades->setAllowExam(false);
 		}
 	}
+	
 }
 void Exam::Examination()
 {
@@ -38,19 +38,19 @@ void Exam::Examination()
 	if (m_count_attempt_exam == m_maxcount_attempt_exam)
 		throw std::exception(std::string("Exam for this group was ended").c_str());
 	m_count_attempt_exam++;
-
-	for (auto student = m_studentgroup->BeginStudentGroup(); student < m_studentgroup->EndStudentGroup(); student++)
+	for (auto student : *m_studentgroup)
 	{
-		if ((*student)->getSubjectsGrades().count(m_subject) == 0)
+		Grades* grades = student->gGrades(m_subject);
+		if (grades == nullptr)
 			continue;
-		Grades * grades = (*student)->getSubjectsGrades().find(m_subject)->second;
+
 		if (grades->getAllowExam())
 		{
 			if (m_count_attempt_exam == m_maxcount_attempt_exam)
 			{
-				grades->setGradesExam((*student)->GradesExam(true));
+				grades->setGradesExam(student->GradesExam(true));
 			}
-			else grades->setGradesExam((*student)->GradesExam(false));
+			else grades->setGradesExam(student->GradesExam(false));
 
 			if (grades->getGradesExam() >= 3)
 			{
@@ -59,7 +59,7 @@ void Exam::Examination()
 			else if (m_count_attempt_exam == m_maxcount_attempt_exam)
 			{
 				grades->setAllowExam(false);
-				m_studentgroup->RemoveStudent((*student));
+				m_studentgroup->RemoveStudent(student);
 			}
 		}
 	}

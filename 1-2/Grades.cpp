@@ -3,6 +3,11 @@
 Grades::Grades(const std::vector<int>& grades):m_grades(grades)
 {}
 
+void Grades::AddGrades(const std::vector<int>& grades)
+{
+	if(this != nullptr)
+		m_grades = grades;
+}
 const std::vector<int>& Grades::getGrades()const
 {
 	return m_grades;

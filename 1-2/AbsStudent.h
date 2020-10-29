@@ -18,10 +18,7 @@ public:
 	const std::string& getName()const;
 	const std::string& getSurname()const;
 	const std::string& getPatronymic()const;
-	const std::map<std::string, Grades*>& getSubjectsGrades()const;
-
-	void setSubjectsGrades(std::map<std::string, std::vector<int>> &subjects_grades);
-
+	Grades* gGrades(const std::string subjects);
 	virtual const int GradesExam(bool LastAttempt)const = 0;
 
 	friend std::ostream& operator<<(std::ostream& os, const AbsStudent& student);

@@ -15,9 +15,16 @@ public:
 	StudentGroup(const int studet_numbers, const std::string& studentgroupnumber);
 
 	void AddStudent(AbsStudent& student);
-	std::vector<AbsStudent*>::iterator BeginStudentGroup();
-	std::vector<AbsStudent*>::iterator EndStudentGroup();
 
+	auto begin() const 
+	{
+		return m_students.begin();
+	}
+	auto end() const
+	{
+		return m_students.end();
+	}
+	
 	void SortFIO();
 	void Sortgrades(const std::string subject);
 	AbsStudent* Find(const std::string&, const std::string& surname, const std::string& patronymic)const;

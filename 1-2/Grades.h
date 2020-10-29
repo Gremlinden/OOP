@@ -3,11 +3,12 @@
 class Grades
 {
 private:
-	const std::vector<int> m_grades;
+	std::vector<int> m_grades;
 	int m_gradesExam;
 	bool m_allowExam;
 public:
 	Grades(const std::vector<int>& grades);
+	void AddGrades(const std::vector<int>& grades);
 	const std::vector<int>& getGrades()const;
 	const int getGradesExam()const;
 	void setGradesExam(int gradesExam);

@@ -14,4 +14,5 @@ public:
 	Exam(StudentGroup* studentgroup, const std::string& subject, int count_attempt_exam = 0);
 	void AllowExam();
 	void Examination();
+
 };

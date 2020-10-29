@@ -5,7 +5,7 @@ int main()
 {
 	setlocale(LC_ALL, "ru");
 
-	Student studen1{ "abd", "aa", "Александрович", {{"qq", {2}}, {"aa", {5,5}}} };
+	Student studen1{ "abd", "aa", "Александрович", { {"aa", {5,5}}} };
 	Student studen2{ "abc", "aa", "Александрович",{{"qq", {2,5}}, {"aa", {5,5}}} };
 	Student studen3{ "asc", "aс", "Александрович",{{"qq", {5,5}}, {"aa", {5,5}}} };
 	Botanist studen4{ "asc", "aб", "Александрович",{{"qq", {1}}, {"aa", {5,5}}}  };
@@ -14,8 +14,9 @@ int main()
 	MemberOfStudentCouncil studen7{ "a", "Шляханов", "Александрович", { {"qq", {5,5,2}}, {"aa", {5,5}}} };
 	MemberOfStudentCouncil studen8{ "a", "Шляханов", "Александрович", { {"qq", {5,5,2}}, {"aa", {5,5}}} };
 	MemberOfStudentCouncil studen9{ "a", "Шляханов", "Александрович",{ {"qq", {5,5,2}}, {"aa", {5,5}}} };
-	//studen1.setSubjectsGrades(std::pair<string, vector<int>>({"qq", {5,5,2}}, {"aa", {5,5}}} ));
-
+	
+	studen1.gGrades("qq")->AddGrades({ 5,5,2 });
+	
 	//std::cout << studen1 << std::endl;
 
 	StudentGroup rrrr{ 9, "8091"};

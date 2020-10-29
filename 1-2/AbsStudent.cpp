@@ -28,18 +28,15 @@ const std::string& AbsStudent::getPatronymic()const
 {
 	return m_patronymic;
 }
-const std::map<std::string, Grades*>& AbsStudent::getSubjectsGrades()const
+
+Grades* AbsStudent::gGrades(const std::string subjects)
 {
-	return this->m_subjects_grades;
+	auto k = this->m_subjects_grades.end();
+	if (this->m_subjects_grades.find(subjects) != this->m_subjects_grades.end())
+		return this->m_subjects_grades.find(subjects)->second;
+	return nullptr;
 }
 
-void AbsStudent::setSubjectsGrades(std::map<std::string, std::vector<int>> &subjects_grades)
-{
-	for (const auto& k : subjects_grades)
-	{
-		this->m_subjects_grades[k.first] = new Grades{ k.second };
-	}
-}
 
 
 std::ostream& operator<<(std::ostream& os, const AbsStudent& student)

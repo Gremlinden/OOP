@@ -28,7 +28,6 @@ AbsStudent* StudentGroup::Find(const std::string & name, const std::string & sur
 			return k;
 		}
 	}
-	throw std::exception(nullptr);
 }
 
 const int comparison(const std::string a, const std::string b)
@@ -82,14 +81,14 @@ void StudentGroup::Sortgrades(const std::string subject)
 
 	sort(this->m_students.begin(), this->m_students.end(), [&](AbsStudent * a, AbsStudent * b)
 		{
-			if ((a->getSubjectsGrades().count(subject) == 0) || (b->getSubjectsGrades().count(subject) == 0))
+			if ((a->gGrades(subject) == nullptr) || (b->gGrades(subject) == nullptr))
 			{
 				return false;
 			}
 			else
 			{				
-				std::vector<int> vec1 = a->getSubjectsGrades().find(subject)->second->getGrades();
-				std::vector<int> vec2 = b->getSubjectsGrades().find(subject)->second->getGrades();
+				std::vector<int> vec1 = a->gGrades(subject)->getGrades();
+				std::vector<int> vec2 = b->gGrades(subject)->getGrades();
 				int sum1 = 0, sum2 = 0;
 				for (const auto& n : vec1)
 					sum1 += n;
@@ -100,14 +99,7 @@ void StudentGroup::Sortgrades(const std::string subject)
        }
 	);
 }
-std::vector<AbsStudent*>::iterator StudentGroup::BeginStudentGroup()
-{
-	return this->m_students.begin();
-}
-std::vector<AbsStudent*>::iterator StudentGroup::EndStudentGroup()
-{
-	return this->m_students.end();
-}
+
 std::ostream& operator<<(std::ostream & os, const StudentGroup & studentgroup)
 {
 	os << "Group " << studentgroup.m_studentgroupnumber << std::endl;
