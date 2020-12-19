@@ -60,5 +60,11 @@ class Queue():
                     return True
         return False
 
-    def addOperator(self, operator):
+    def __addOperator(self, operator):
         self.__operators.append(operator)
+
+    def check(self, operator):
+        if set(operator.listrequest).isdisjoint(self.listrequest):
+            return False
+        else:
+            self.__addOperator(operator)
