@@ -2,9 +2,7 @@ from electrqueue import Queue
 from visitor import Visitor
 from operatr import Operator
 from request import Request
-
 import random
-import time
 
 request1 = Request('PAYTAXES', 1)
 request2 = Request('OPENBUSINESS', 1)

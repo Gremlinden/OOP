@@ -1,7 +1,7 @@
 import time
 
 class Operator():
-    __slots__ = ['__name', '__listrequest', '__isFree', '__clientsNumber']
+    __slots__ = ['__name', '__listrequest', '__clientsNumber']
 
     def __init__(self, name, listrequest):
         self.__name = name
@@ -14,10 +14,6 @@ class Operator():
     @property
     def listrequest(self):
         return self.__listrequest
-
-    @property
-    def isFree(self):
-        return self.__isFree
 
     @property
     def clientsNumber(self):
