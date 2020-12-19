@@ -1,55 +1,68 @@
-import time
-from threading import Thread
-
-
+from threading import Thread, Lock
+import threading
 class Queue():
-    __slots__ = ['__electrQueue', '__operators', '__status', '__numberVisitors']
+    __slots__ = ['__electrQueue', '__operators', '__listrequest', '__status', '__numberVisitors', '__workingDayTime' ]
 
-    def __init__(self):
+    def __init__(self, workingdaytime, listrequest):
+        self.__listrequest = listrequest
         self.__electrQueue = list()
         self.__operators = list()
         self.__status = False
         self.__numberVisitors = 0
+        self.__workingDayTime = workingdaytime
 
     def __str__(self):
         return 'In queue {} visitors'.format(len(self.__electrQueue))
 
     def __del__(self):
         print('Number of visitors working day: {}'.format(self.__numberVisitors))
+        if(len(self.__electrQueue)):
+            print('{} visitors not served'.format(len(self.__electrQueue)))
 
-    def endWorkingDay(self):
+    @property
+    def listrequest(self):
+        return self.__listrequest
+
+    def __endWorkingDay(self):
+        self.__status = False
         while True:
-            opFree = 0
-            if not len(self.__electrQueue):
-                for op in self.__operators:
-                    if op.isFree:
-                        opFree += 1
-                if opFree == len(self.__operators):
-                    self.__status = False
-                    return;
-            else:
-                time.sleep(1)
+            if threading.active_count() == 2:
+                break
 
-    def __operatorisWorking(self, operator):
-        while self.__status:
-            if len(self.__electrQueue):
-                if operator.isFree:
-                    operator.work(self.__electrQueue.pop())
+
+    def __operatorisWorking(self, operator, lock):
+        while self.__status:#
+            lock.acquire()# оператор пошел проверять запрос, остальные операторы ждут
+            if len(self.__electrQueue):# проверяем есть ли в очереди посетители, если нет то открываем замок и следующий оператор проверяет запрос
+                vis = self.__electrQueue[-1]# достаем из очереди последнего пришедшего посетителя
+                for request in operator.listrequest:
+                    if vis.type == request.type:#проверяем может ли запрос посетителя обработать оператор,
+                                                #если нет то открываем замок и следующий оператор проверяет запрос
+                        self.__electrQueue.pop()#удаляем последнего посетителя из очереди
+                        lock.release()#открываем замок и следующий оператор проверяет запрос
+                        operator.work(request)#оператор обрабатывает запрос
+                        break #оператор ожидает открытия замка
+                else:
+                    lock.release()
             else:
-                time.sleep(1)
+                lock.release()
+
 
     def startWorkingDay(self):
         self.__status = True
+        lock = Lock() #Создаем общий замок
         for op in self.__operators:
-            th = Thread(target=self.__operatorisWorking, args=[op])
-            th.start()
+            Thread(target=self.__operatorisWorking, args=[op, lock]).start()#Создаем для каждого оператора свой поток
+        threading.Timer(self.__workingDayTime, self.__endWorkingDay).start()
 
     def addVisitor(self, visitor):
         for op in self.__operators:
-            if visitor.type in op.types:
-                self.__electrQueue.append(visitor)
-                self.__numberVisitors += 1
-                return;
+            for request in op.listrequest:
+                if visitor.type == request.type:
+                    self.__electrQueue.append(visitor)
+                    self.__numberVisitors += 1
+                    return;
+        return False;
 
     def addOperator(self, operator):
         self.__operators.append(operator)

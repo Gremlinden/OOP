@@ -1,32 +1,19 @@
-from enum import Enum, auto
 import time
 
-
-class RequestType(Enum):
-    PAYTAXES = auto()
-    OPENBUSINESS = auto()
-    ASKQUESTION = auto()
-
-timeRequest = {RequestType.PAYTAXES: 2,
-            RequestType.OPENBUSINESS: 3,
-            RequestType.ASKQUESTION: 1}
-
-
 class Operator():
-    __slots__ = ['__name', '__types', '__isFree', '__clientsNumber']
+    __slots__ = ['__name', '__listrequest', '__isFree', '__clientsNumber']
 
-    def __init__(self, name, types):
+    def __init__(self, name, listrequest):
         self.__name = name
-        self.__types = types
-        self.__isFree = True
+        self.__listrequest = listrequest
         self.__clientsNumber = 0
 
     def __del__(self):
         print('{} serve {} visitors'.format(self.__name, self.__clientsNumber))
 
     @property
-    def types(self):
-        return self.__types
+    def listrequest(self):
+        return self.__listrequest
 
     @property
     def isFree(self):
@@ -36,8 +23,6 @@ class Operator():
     def clientsNumber(self):
         return self.__clientsNumber
 
-    def work(self, visitor):
-        self.__isFree = False
+    def work(self, request):
         self.__clientsNumber += 1
-        time.sleep(timeRequest[visitor.type])
-        self.__isFree = True
+        time.sleep(request.time)

@@ -1,3 +1,4 @@
+
 class Visitor():
     __slots__ = ['__type']
 
