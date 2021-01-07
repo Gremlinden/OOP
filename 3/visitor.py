@@ -1,10 +1,18 @@
 
 class Visitor():
-    __slots__ = ['__type']
+    __slots__ = ['__name', '__request']
 
-    def __init__(self, type):
-        self.__type = type
+    def __init__(self, name, request):
+        self.__name = name
+        self.__request = request
 
     @property
-    def type(self):
-        return self.__type
+    def name(self):
+        return self.__name
+
+    @property
+    def request(self):
+        return self.__request
+
+    def addFunctionRequest(self, function):
+        self.__request.function = function
